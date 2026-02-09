@@ -3,20 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Landing Page</title>
+    <title>Meus Links | Jortencio</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f0f2f5; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: inline-block; }
-        h1 { color: #1c1e21; }
-        .btn { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1c1e21 0%, #007bff 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin-bottom: 15px;
+        }
+        h1 { font-size: 24px; margin-bottom: 5px; }
+        p { opacity: 0.8; margin-bottom: 25px; }
+        .btn {
+            display: block;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: scale(1.05); background: #f0f0f0; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🚀 Minha Landing Page</h1>
-        <p>Projeto criado com sucesso no GitHub!</p>
-        <br>
-        <a href="#" class="btn">Clique Aqui</a>
+    <div class="container">
+        <h1>Jortencio Design</h1>
+        <p>Desenvolvedor & Criativo</p>
+        
+        <a href="COLOQUE_SEU_WHATSAPP_AQUI" class="btn">Falar no WhatsApp</a>
+        <a href="COLOQUE_SEU_INSTAGRAM_AQUI" class="btn">Instagram</a>
+        <a href="COLOQUE_SEU_PORTFOLIO_AQUI" class="btn">Meu Portfólio</a>
     </div>
 </body>
 </html>
