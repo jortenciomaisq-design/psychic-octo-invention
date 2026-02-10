@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -13,21 +14,20 @@
         button { background-color: #4CAF50; color: white; border: none; padding: 15px; margin: 10px 0; border-radius: 10px; cursor: pointer; font-size: 1.1em; width: 100%; }
         .btn-whatsapp { background-color: #25D366; text-decoration: none; display: inline-block; width: 90%; color: white; padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 20px; }
         #saldo { font-size: 1.5em; color: #FFD700; margin-bottom: 20px; display: block; }
+        input { padding: 15px; width: 80%; border-radius: 10px; border: none; text-align: center; font-size: 1em; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="payment-screen" class="quiz-box active">
-            <h1>Bem-vindo ao Quiz</h1>
-            <p>Faça um pagamento de **500 Kz** para liberar o jogo.</p>
+            <h1>Kwanza Quiz Pro</h1>
+            <p>1. Faça um pagamento de **500 Kz** via WhatsApp.</p>
+            <p>2. Receba o seu **Código de Acesso**.</p>
             <a href="https://wa.me/244939696068?text=Quero%20pagar%20500%20Kz%20para%20jogar." class="btn-whatsapp">Pagar via WhatsApp</a>
-        </div>
-
-        <div id="start-screen" class="quiz-box">
-            <h1>Jogo Liberado!</h1>
-            <p>Responda para ganhar. Cada acerto vale **75 Kz**.</p>
-            <button onclick="startGame()">Começar Jogo</button>
+            <br><br>
+            <input type="text" id="access-code" placeholder="Insira o Código de Acesso">
+            <button onclick="checkCode()">Entrar no Jogo</button>
         </div>
 
         <div id="quiz-area" class="quiz-box">
@@ -47,32 +47,36 @@
         let saldo = 0;
         let perguntaAtual = 0;
         const valorAcerto = 75;
+        
+        // --- CONTROLO TOTAL: A TUA SENHA ---
+        const SENHA_CORRETA = "JORTENCIO2024";
 
-        // 10 Perguntas (Tu podes mudar aqui)
         const perguntas = [
             {q: "Capital de Angola?", a: ["Luanda", "Benguela"], c: "Luanda"},
             {q: "Quanto é 50+50?", a: ["100", "150"], c: "100"},
             {q: "Moeda de Angola?", a: ["Dólar", "Kwanza"], c: "Kwanza"},
-            // Adicione aqui até 10 perguntas seguindo o padrão
-        ];const perguntas = [
-    {q: "Qual é o maior rio que passa inteiramente por Angola?", a: ["Kwanza", "Cunene"], c: "Kwanza"},
-    {q: "Qual é a montanha mais alta de Angola?", a: ["Morro do Moco", "Serra da Leba"], c: "Morro do Moco"},
-    {q: "Em que ano Angola proclamou a sua independência?", a: ["1975", "1980"], c: "1975"},
-    {q: "Qual é a cor que não faz parte da bandeira nacional de Angola?", a: ["Azul", "Amarelo"], c: "Azul"},
-    {q: "Qual animal é o símbolo das Palancas Negras?", a: ["Antílope", "Leão"], c: "Antílope"},
-    {q: "Em que província ficam as Quedas de Kalandula?", a: ["Malanje", "Huíla"], c: "Malanje"},
-    {q: "Quantas províncias tem Angola?", a: ["18", "20"], c: "18"}
-];
+            {q: "Maior rio de Angola?", a: ["Kwanza", "Cunene"], c: "Kwanza"},
+            {q: "Ano da Independência?", a: ["1975", "1980"], c: "1975"},
+            {q: "Cor não presente na bandeira?", a: ["Azul", "Amarelo"], c: "Azul"},
+            {q: "Animal das Palancas Negras?", a: ["Antílope", "Leão"], c: "Antílope"},
+            {q: "Província das Quedas de Kalandula?", a: ["Malanje", "Huíla"], c: "Malanje"},
+            {q: "Total de províncias?", a: ["18", "20"], c: "18"},
+            {q: "Fim do Quiz!", a: ["Ver resultado"], c: "Ver resultado"}
+        ];
 
-
-        function startGame() {
-            document.getElementById('start-screen').classList.remove('active');
-            document.getElementById('quiz-area').classList.add('active');
-            showQuestion();
+        function checkCode() {
+            let code = document.getElementById('access-code').value;
+            if(code.toUpperCase() === SENHA_CORRETA) {
+                document.getElementById('payment-screen').classList.remove('active');
+                document.getElementById('quiz-area').classList.add('active');
+                showQuestion();
+            } else {
+                alert("Código de Acesso inválido! Tente novamente.");
+            }
         }
 
         function showQuestion() {
-            if(perguntaAtual >= perguntas.length) {
+            if(perguntaAtual >= perguntas.length - 1) {
                 finishGame();
                 return;
             }
@@ -90,7 +94,7 @@
             if(answer === perguntas[perguntaAtual].c) {
                 saldo += valorAcerto;
             } else {
-                saldo -= valorAcerto; // Penalidade por errar
+                saldo -= valorAcerto;
             }
             perguntaAtual++;
             showQuestion();
@@ -106,4 +110,3 @@
     </script>
 </body>
 </html>
-
