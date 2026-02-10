@@ -3,95 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gere Kwanzas Online | Seu Sucesso na Web</title>
+    <title>Kwanza Quiz Pro | Jortencio Design</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: white;
-            text-align: center;
-            /* URL da imagem de fundo gerada */
-            background-image: url('https://image.pollinations.ai/prompt/person%20making%20money%20online%20with%20Angolan%20Kwanzas%20on%20a%20laptop%20with%20city%20sunset%20view,realistic%20photo,professional');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6); /* Sobreposição escura */
-            z-index: 1;
-        }
-
-        .container {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            width: 85%;
-            z-index: 2;
-            border: 1px solid #4CAF50;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            color: #4CAF50; /* Verde Kwanzas */
-            text-transform: uppercase;
-        }
-
-        p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-            color: #eee;
-        }
-
-        .button-group a {
-            display: block;
-            color: white;
-            padding: 18px;
-            margin: 15px 0;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 1.2em;
-            font-weight: bold;
-            transition: transform 0.2s;
-        }
-
-        .button-group a:hover {
-            transform: scale(1.05);
-        }
-
-        /* Cores dos botões */
-        .btn-whatsapp { background-color: #25D366; }
-        .btn-cadastro { background-color: #FF9800; } /* Laranja destaque */
-
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; color: white; background-image: url('https://image.pollinations.ai/prompt/person%20making%20money%20online%20with%20Angolan%20Kwanzas%20on%20a%20laptop%20with%20city%20sunset%20view,realistic%20photo,professional'); background-size: cover; background-position: center; }
+        body::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 1; }
+        .container { background-color: rgba(0, 0, 0, 0.85); padding: 30px; border-radius: 20px; max-width: 450px; width: 90%; z-index: 2; border: 2px solid #4CAF50; text-align: center; }
+        .quiz-box { display: none; }
+        .active { display: block; }
+        button { background-color: #4CAF50; color: white; border: none; padding: 15px; margin: 10px 0; border-radius: 10px; cursor: pointer; font-size: 1.1em; width: 100%; }
+        .btn-whatsapp { background-color: #25D366; text-decoration: none; display: inline-block; width: 90%; color: white; padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 20px; }
+        #saldo { font-size: 1.5em; color: #FFD700; margin-bottom: 20px; display: block; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Ganhe Kwanzas Online</h1>
-        <p>Desenvolva seu potencial financeiro na internet</p>
 
-        <div class="button-group">
-            <a href="https://wa.me/244939696068?text=Olá!%20Quero%20me%20cadastrar%20no%20site." class="btn-cadastro">Cadastrar-se</a>
-            
-            <a href="https://wa.me/244939696068?text=Olá!%20Vi%20o%20seu%20site." class="btn-whatsapp">Falar no WhatsApp</a>
+    <div class="container">
+        <div id="payment-screen" class="quiz-box active">
+            <h1>Bem-vindo ao Quiz</h1>
+            <p>Faça um pagamento de **500 Kz** para liberar o jogo.</p>
+            <a href="https://wa.me/244939696068?text=Quero%20pagar%20500%20Kz%20para%20jogar." class="btn-whatsapp">Pagar via WhatsApp</a>
+        </div>
+
+        <div id="start-screen" class="quiz-box">
+            <h1>Jogo Liberado!</h1>
+            <p>Responda para ganhar. Cada acerto vale **75 Kz**.</p>
+            <button onclick="startGame()">Começar Jogo</button>
+        </div>
+
+        <div id="quiz-area" class="quiz-box">
+            <span id="saldo">Saldo: 0 Kz</span>
+            <div id="question-text"></div>
+            <div id="options-area"></div>
+        </div>
+
+        <div id="win-screen" class="quiz-box">
+            <h2 style="color: #4CAF50;">Jogo Finalizado!</h2>
+            <p id="final-result"></p>
+            <a id="withdraw-link" href="#" class="btn-whatsapp">Levantar Saldo</a>
         </div>
     </div>
+
+    <script>
+        let saldo = 0;
+        let perguntaAtual = 0;
+        const valorAcerto = 75;
+
+        // 10 Perguntas (Tu podes mudar aqui)
+        const perguntas = [
+            {q: "Capital de Angola?", a: ["Luanda", "Benguela"], c: "Luanda"},
+            {q: "Quanto é 50+50?", a: ["100", "150"], c: "100"},
+            {q: "Moeda de Angola?", a: ["Dólar", "Kwanza"], c: "Kwanza"},
+            // Adicione aqui até 10 perguntas seguindo o padrão
+        ];
+
+        function startGame() {
+            document.getElementById('start-screen').classList.remove('active');
+            document.getElementById('quiz-area').classList.add('active');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if(perguntaAtual >= perguntas.length) {
+                finishGame();
+                return;
+            }
+            let p = perguntas[perguntaAtual];
+            document.getElementById('question-text').innerHTML = `<h3>${p.q}</h3>`;
+            let optionsHTML = '';
+            p.a.forEach(opt => {
+                optionsHTML += `<button onclick="checkAnswer('${opt}')">${opt}</button>`;
+            });
+            document.getElementById('options-area').innerHTML = optionsHTML;
+            document.getElementById('saldo').innerText = `Saldo: ${saldo} Kz`;
+        }
+
+        function checkAnswer(answer) {
+            if(answer === perguntas[perguntaAtual].c) {
+                saldo += valorAcerto;
+            } else {
+                saldo -= valorAcerto; // Penalidade por errar
+            }
+            perguntaAtual++;
+            showQuestion();
+        }
+
+        function finishGame() {
+            document.getElementById('quiz-area').classList.remove('active');
+            document.getElementById('win-screen').classList.add('active');
+            document.getElementById('final-result').innerText = `O teu saldo final é: ${saldo} Kz`;
+            let link = `https://wa.me/244939696068?text=Terminei o jogo. Saldo: ${saldo} Kz. Quero levantar!`;
+            document.getElementById('withdraw-link').href = link;
+        }
+    </script>
 </body>
 </html>
 
