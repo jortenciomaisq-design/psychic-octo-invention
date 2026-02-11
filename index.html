@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -5,65 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kwanza Quiz Pro | Jortencio Design</title>
     <style>
-        /* 1. FUNDO COM IMAGEM (Baseado na imagem enviada) */
         body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', Arial, sans-serif; /* */
+            font-family: 'Segoe UI', Arial, sans-serif;
             background: url('https://images.unsplash.com/photo-1454165833767-027eece159a8?q=80&w=2070') no-repeat center center fixed;
             background-size: cover;
+            color: white;
         }
 
-        /* 2. CAIXA PRETA TRANSPARENTE (Overlay) */
         .container {
-            background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro */
-            padding: 40px 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
             border-radius: 25px;
-            border: 2px solid #4CAF50; /* Borda verde fina */
+            border: 2px solid #4CAF50;
             width: 90%;
             max-width: 400px;
             text-align: center;
-            color: white;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h1 { font-size: 2rem; margin-bottom: 30px; } /* */
-        p { font-size: 1rem; line-height: 1.6; margin-bottom: 20px; }
-
-        /* 3. BOTÕES VERDES (Estilo WhatsApp/Entrar) */
         .btn-green {
-            background-color: #66cc66; /* Verde claro */
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            width: 100%;
-            cursor: pointer;
-            margin-bottom: 15px;
-            text-decoration: none;
+            background-color: #66cc66;
+            color: white; border: none;
+            padding: 15px; border-radius: 12px;
+            font-size: 1.1rem; font-weight: bold;
+            width: 100%; cursor: pointer;
+            margin-bottom: 10px; text-decoration: none;
             display: block;
         }
 
-        /* 4. CAMPO DE SENHA BRANCO */
         input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0 20px 0;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            text-align: center;
-            box-sizing: border-box;
-            background-color: white; /* */
+            width: 100%; padding: 15px;
+            margin: 10px 0; border: none;
+            border-radius: 12px; font-size: 1rem;
+            text-align: center; box-sizing: border-box;
         }
 
-        #quiz-area { display: none; }
+        #quiz-area, #saque-area { display: none; }
+        .saldo-display { font-size: 1.5rem; color: #66cc66; margin: 15px 0; font-weight: bold; }
+        .pergunta { font-size: 1.2rem; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -71,44 +54,61 @@
     <div class="container">
         <div id="payment-screen">
             <h1>Kwanza Quiz Pro</h1>
-            
-            <p>1. Faça um pagamento de **500 Kz** via WhatsApp.</p>
-            <p>2. Receba o seu **Código de Acesso**.</p>
-
-            <a href="https://wa.me/SEUNUMERO" class="btn-green">Pagar via WhatsApp</a>
-
+            <p>1. Pague **500 Kz** via WhatsApp.</p>
+            <p>2. Use o seu **Código de Acesso**.</p>
+            <a href="https://wa.me/244921447214" class="btn-green">Pagar via WhatsApp</a>
             <input type="text" id="access-code" placeholder="Insira o Código de Acesso">
-
             <button class="btn-green" style="background-color: #4c914c;" onclick="checkCode()">Entrar no Jogo</button>
         </div>
 
         <div id="quiz-area">
-            <h2 id="pergunta-titulo"></h2>
-            <div id="opcoes-box"></div>
-            <p style="margin-top: 20px;">Saldo: <span id="saldo-valor">0</span> Kz</p>
+            <div class="saldo-display">Saldo: <span id="saldo-valor">0</span> Kz</div>
+            <div id="quiz-container">
+                <p id="pergunta-titulo" class="pergunta"></p>
+                <div id="opcoes-box"></div>
+            </div>
+        </div>
+
+        <div id="saque-area">
+            <h2>Parabéns! 🎉</h2>
+            <p>Seu saldo final: <span id="saldo-final">0</span> Kz</p>
+            <p>Escolha o método de levantamento:</p>
+            <button class="btn-green" onclick="escolherMetodo('IBAN')">Levantar via IBAN</button>
+            <button class="btn-green" onclick="escolherMetodo('Multicaixa Express')">Levantar via Express</button>
+            
+            <div id="form-saque" style="display:none; margin-top:20px;">
+                <input type="text" id="dados-saque" placeholder="Digite o IBAN ou Número">
+                <button class="btn-green" style="background-color: #4c914c;" onclick="enviarPedido()">Pedir Saque ao CEO</button>
+            </div>
         </div>
     </div>
 
     <script>
-        const SENHA_CORRETA = "JORTENCIO2024"; /* */
+        const SENHA_CORRETA = "JORTENCIO2024";
         let saldo = 0;
         let perguntaAtual = 0;
+        let metodoSelecionado = "";
 
         const perguntas = [
-            {q: "Capital de Angola?", a: ["Luanda", "Benguela"], c: 0},
-            {q: "Moeda de Angola?", a: ["Dólar", "Kwanza"], c: 1}, /* */
-            {q: "Quanto é 50+50?", a: ["100", "150"], c: 0} /* */
+            {q: "Qual a capital da França?", a: ["Paris", "Lyon"], c: 0},
+            {q: "Maior país do mundo?", a: ["Brasil", "Rússia"], c: 1},
+            {q: "Quem pintou a Mona Lisa?", a: ["Da Vinci", "Picasso"], c: 0},
+            {q: "Moeda oficial dos EUA?", a: ["Euro", "Dólar"], c: 1},
+            {q: "Onde ficam as Pirâmides?", a: ["Egito", "México"], c: 0},
+            {q: "Planeta conhecido como Vermelho?", a: ["Marte", "Vénus"], c: 0},
+            {q: "Quantos continentes existem?", a: ["5", "7"], c: 1},
+            {q: "Oceano mais profundo?", a: ["Índico", "Pacífico"], c: 1},
+            {q: "Língua oficial do Brasil?", a: ["Espanhol", "Português"], c: 1},
+            {q: "Animal mais rápido da terra?", a: ["Guepardo", "Leão"], c: 0}
         ];
 
         function checkCode() {
             let code = document.getElementById('access-code').value;
-            if (code.toUpperCase() === SENHA_CORRETA) { /* */
+            if (code.toUpperCase() === SENHA_CORRETA) {
                 document.getElementById('payment-screen').style.display = 'none';
                 document.getElementById('quiz-area').style.display = 'block';
                 showQuestion();
-            } else {
-                alert("Código de Acesso inválido!");
-            }
+            } else { alert("Código inválido!"); }
         }
 
         function showQuestion() {
@@ -119,19 +119,41 @@
                 box.innerHTML = "";
                 item.a.forEach((opcao, index) => {
                     const btn = document.createElement('button');
-                    btn.innerText = opcao;
-                    btn.className = "btn-green";
+                    btn.innerText = opcao; btn.className = "btn-green";
                     btn.onclick = () => {
-                        if(index === item.c) saldo += 75;
-                        document.getElementById('saldo-valor').innerText = saldo;
+                        if(index === item.c) {
+                            saldo += 75;
+                            document.getElementById('saldo-valor').innerText = saldo;
+                        }
                         perguntaAtual++;
                         showQuestion();
                     };
                     box.appendChild(btn);
                 });
             } else {
-                document.getElementById('quiz-area').innerHTML = "<h2>Fim do Quiz!</h2><p>Saldo: " + saldo + " Kz</p>";
+                document.getElementById('quiz-area').style.display = 'none';
+                document.getElementById('saque-area').style.display = 'block';
+                document.getElementById('saldo-final').innerText = saldo;
             }
+        }
+
+        function escolherMetodo(metodo) {
+            metodoSelecionado = metodo;
+            document.getElementById('form-saque').style.display = 'block';
+            document.getElementById('dados-saque').placeholder = "Insira seu " + metodo;
+        }
+
+        function enviarPedido() {
+            let dados = document.getElementById('dados-saque').value;
+            if(dados === "") { alert("Preencha os dados!"); return; }
+            
+            // AQUI O SALDO É ADICIONADO À MENSAGEM
+            let mensagem = `Olá CEO! Gostaria de pedir o saque do meu saldo.\n\n` +
+                           `*Saldo:* ${saldo} Kz\n` +
+                           `*Método:* ${metodoSelecionado}\n` +
+                           `*Dados:* ${dados}`;
+            
+            window.location.href = "https://wa.me/244921447214?text=" + encodeURIComponent(mensagem);
         }
     </script>
 </body>
